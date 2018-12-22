@@ -1,5 +1,5 @@
 function Ship() {
-  this.pos = createVector(width / 2, height / 2);
+  this.position = createVector(width / 2, height / 2);
   this.r = 20;
   this.heading = 0;
   this.rotation = 0;
@@ -7,11 +7,13 @@ function Ship() {
   this.isThrusting = false;
 
   this.render = function() {
-    translate(this.pos.x, this.pos.y);
+    push()
+    translate(this.position.x, this.position.y);
     rotate(this.heading + PI / 2);
-    noFill();
+    fill(0);
     stroke(255);
     triangle(-this.r, this.r, this.r, this.r, 0, -this.r);
+    pop()
   };
 
   this.rotate = function() {
@@ -30,7 +32,7 @@ function Ship() {
     if (this.isThrusting) {
       this.thrust();
     }
-    this.pos.add(this.velocity);
+    this.position.add(this.velocity);
     this.velocity.mult(0.99);
   };
 
@@ -40,17 +42,31 @@ function Ship() {
     this.velocity.add(force);
   };
 
+  
+  this.collided = function(asteroid) {
+    let d = dist(
+      this.position.x,
+      this.position.y,
+      asteroid.position.x,
+      asteroid.position.y
+    );
+    if (d < asteroid.radius) {
+      return true;
+    }
+    return false;
+  };
+
   this.screenEdge = function(){
-      if(this.pos.x > width + this.r){
-          this.pos.x =- this.r
-      } else if(this.pos.x < -this.r){
-          this.pos.x = width + this.r
+      if(this.position.x > width + this.r){
+          this.position.x =- this.r
+      } else if(this.position.x < -this.r){
+          this.position.x = width + this.r
       }
 
-      if(this.pos.y > height + this.r){
-        this.pos.y =- this.r
-    } else if(this.pos.y < -this.r){
-        this.pos.y = height + this.r
+      if(this.position.y > height + this.r){
+        this.position.y =- this.r
+    } else if(this.position.y < -this.r){
+        this.position.y = height + this.r
     }
   }
 }
